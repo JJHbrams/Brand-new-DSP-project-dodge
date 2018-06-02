@@ -1,0 +1,83 @@
+OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
+OUTPUT_ARCH(arm)
+ENTRY(_start)
+SECTIONS
+{
+	. = 0x80800000;
+
+	. = ALIGN(8);
+	.text : {
+		__text_start = .;
+		*(.text)
+		__text_end = .;
+	}
+
+	. = ALIGN(8);
+	.rodata : {
+		__rodata_start = .;
+		*(.rodata)
+		__rodata_end = .;
+	}
+
+	. = ALIGN(8);
+	.data : {
+		__data_start = .;
+		*(.data)
+		__data_end = .;
+	}
+
+	. = ALIGN(8);
+	.got : {
+		__got_start = .;
+		*(.got)
+		__got_end = .;
+	}
+
+	. = ALIGN(8);
+	.commandlist : {
+		__commandlist_start = .;
+		*(.commandlist)
+		__commandlist_end = .;
+	}
+
+	. = ALIGN(8);
+	.initlist : {
+		__initlist_start = .;
+		*(.initlist)
+		__initlist_end = .;
+	}
+
+	. = ALIGN(8);
+	.exitlist : {
+		__exitlist_start = .;
+		*(.exitlist)
+		__exitlist_end = .;
+	}
+
+	. = ALIGN(8);
+	.ptaglist : {
+		__ptagtable_begin = .;
+		*(.ptaglist)
+		__ptagtable_end = .;
+	}
+
+	/* the BSS section should *always* be the last section */
+	. = ALIGN(8);
+	.bss : {
+		__bss_start = .;
+		/* first the real BSS data */
+		*(.bss)
+		*(COMMON)
+
+		/* and next the stack */
+		. = ALIGN(8);
+		__stack_start = .;
+
+		/* allocate an 8kB stack */		
+		. = . + 8 * 1024;
+
+		__stack_end = .;
+		__bss_end = .;
+	}
+}
+
